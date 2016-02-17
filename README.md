@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/kefir-react-html.svg)](http://badge.fury.io/js/kefir-react-html)
+[![npm version](https://badge.fury.io/js/kefir-react-html.svg)](http://badge.fury.io/js/kefir-react-html) ![](https://david-dm.org/dirty-js/kefir-react-html.svg)
 
 This library allows you to embed [Kefir](http://rpominov.github.io/kefir/)
 observables into React Virtual DOM.
