@@ -220,10 +220,52 @@ function classesImmediate() {
 export const classes = (...cs) =>
   ({className: Combine.asProperty(...cs, classesImmediate)})
 
-export const bind = template => ({...template, onChange: ({target}) => {
+//
+
+export const setProps = template => {
+  let observable = null
+  let callback = null
+  return e => {
+    if (callback) {
+      observable.offAny(callback)
+      observable = null
+      callback = null
+    }
+    if (e) {
+      callback = ev => {
+        switch (ev.type) {
+          case "value": {
+            const template = ev.value
+            for (const k in template)
+              e[k] = template[k]
+            break
+          }
+          case "error":
+            config.onError(ev.value)
+            break
+          case "end":
+            observable = null
+            callback = null
+            break
+        }
+      }
+      observable = Combine.asStream(template, R.identity)
+      observable.onAny(callback)
+    }
+  }
+}
+
+export const getProps = template => ({target}) => {
   for (const k in template)
     template[k].set(target[k])
-}})
+}
+
+export const bindProps = ({ref, mount, ...template}) =>
+  ({[ref && "ref" || mount && "mount"]: setProps(template),
+    [ref || mount]: getProps(template)})
+
+export const bind = template =>
+  ({...template, onChange: getProps(template)})
 
 //
 
