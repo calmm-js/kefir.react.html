@@ -1,6 +1,6 @@
 {
   "name": "kefir-react-html",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "JSX with Kefir, healthy?",
   "main": "lib/kefir-react-html.js",
   "scripts": {
