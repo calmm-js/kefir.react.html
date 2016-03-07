@@ -1,7 +1,7 @@
 import Kefir from "kefir"
 import R     from "ramda"
 
-import {classes} from "../src/kefir-react-html"
+import {classes} from "../src/kefir.react.html"
 
 function show(x) {
   switch (typeof x) {

@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/kefir-react-html.svg)](http://badge.fury.io/js/kefir-react-html) [![](https://david-dm.org/dirty-js/kefir-react-html.svg)](https://david-dm.org/dirty-js/kefir-react-html)
+[![npm version](https://badge.fury.io/js/kefir.react.html.svg)](http://badge.fury.io/js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html.svg)](https://david-dm.org/calmm-js/kefir.react.html)
 
 This library allows you to embed [Kefir](http://rpominov.github.io/kefir/)
 observables into React Virtual DOM.
@@ -8,7 +8,7 @@ observables into React Virtual DOM.
 The prelifted classes can be accessed from the default import:
 
 ```jsx
-import K from "kefir-react-html"
+import K from "kefir.react.html"
 ```
 
 The names of the prelifted classes are the same as in `React.DOM`.
@@ -42,11 +42,11 @@ a special case, so it had to be renamed.
 The `bind` attribute template
 
 ```jsx
-import {bind} from "kefir-react-html"
+import {bind} from "kefir.react.html"
 ```
 
 can be used to bind an attribute, e.g. `value` or `checked`, to an object with a
-`set` method such as a [Kefir-Atom](https://github.com/dirty-js/kefir-atom):
+`set` method such as a [Kefir-Atom](https://github.com/calmm-js/kefir.atom):
 
 ```jsx
 const settable = Atom("")
@@ -65,7 +65,7 @@ the event target to the attribute object, above `settable`.
 The `classes` attribute template
 
 ```jsx
-import {classes} from "kefir-react-html"
+import {classes} from "kefir.react.html"
 ```
 
 offers a way to specify `className` with conditional content depending on
@@ -125,7 +125,7 @@ If you need a lifted version of a HTML class that is not already lifted, you can
 use `fromClass`:
 
 ```jsx
-import K, {fromClass} from "kefir-react-html"
+import K, {fromClass} from "kefir.react.html"
 ...
 K.special = fromClass("special")
 ```
@@ -134,7 +134,7 @@ There is also `fromClasses` that lifts an object of classes to an object of
 lifted classes.  For example, given
 
 ```jsx
-import {fromClasses} from "kefir-react-html"
+import {fromClasses} from "kefir.react.html"
 ...
 const L = fromClasses({Some, Custom, Classes})
 ```
@@ -150,7 +150,7 @@ the class of a top-most element depends on a Kefir observable, one can use
 `fromKefir`:
 
 ```jsx
-import {fromKefir} from "kefir-react-html"
+import {fromKefir} from "kefir.react.html"
 ...
 const choice = Atom(false)
 ...
@@ -162,7 +162,7 @@ fromKefir(choice.map(c => c ? <True/> : <False/>))
 For notational convenience, the default import
 
 ```jsx
-import K from "kefir-react-html"
+import K from "kefir.react.html"
 ```
 
 is also a generalized observable combiner.  It is roughly a combination of a
@@ -179,4 +179,4 @@ skips duplicates.
 
 ## Longer examples
 
-* [TodoMVC](https://github.com/dirty-js/kefir-react-atom-todomvc)
+* [TodoMVC](https://github.com/calmm-js/kefir.react.atom-todomvc)
