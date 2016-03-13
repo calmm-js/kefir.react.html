@@ -192,7 +192,7 @@ fromIds :: (Show id) => Observable [id] -> (id -> a) -> Property [a]
 ```
 
 `fromIds(idsObs, fromId)` assumes that the given `fromId` function is pure.  It
-the stores and reuses the return values of `fromId` between changes from the
+then stores and reuses the return values of `fromId` between changes of the
 `idsObs` observable.  Assuming `idsObs` does not produce changes unnecessarily,
 `fromIds` allows large arrays of elements to be updated incrementally.
 
