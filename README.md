@@ -177,6 +177,25 @@ If none of the arguments contains Kefir observables, the result of a `K(...)`
 invocation is a plain value.  Otherwise the result is a Kefir property that also
 skips duplicates.
 
+### Incremental arrays `fromIds`
+
+For efficient construction of arrays of elements, the `fromIds`
+
+```jsx
+import {fromIds} from "kefir.react.html"
+```
+
+combinator is provided.  It can be seen to have the following type:
+
+```haskell
+fromIds :: (Show id) => Observable [id] -> (id -> a) -> Property [a]
+```
+
+`fromIds(idsObs, fromId)` assumes that the given `fromId` function is pure.  It
+the stores and reuses the return values of `fromId` between changes from the
+`idsObs` observable.  Assuming `idsObs` does not produce changes unnecessarily,
+`fromIds` allows large arrays of elements to be updated incrementally.
+
 ## Longer examples
 
 * [TodoMVC](https://github.com/calmm-js/kral-todomvc)
