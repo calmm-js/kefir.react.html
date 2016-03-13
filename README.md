@@ -179,4 +179,5 @@ skips duplicates.
 
 ## Longer examples
 
-* [TodoMVC](https://github.com/calmm-js/kefir.react.atom-todomvc)
+* [TodoMVC](https://github.com/calmm-js/kral-todomvc)
+* [Examples](https://github.com/calmm-js/kral-examples)
