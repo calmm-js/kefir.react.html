@@ -46,7 +46,7 @@ import {bind} from "kefir.react.html"
 ```
 
 can be used to bind an attribute, e.g. `value` or `checked`, to an object with a
-`set` method such as a [Kefir-Atom](https://github.com/calmm-js/kefir.atom):
+`set` method such as a [Kefir.Atom](https://github.com/calmm-js/kefir.atom):
 
 ```jsx
 const settable = Atom("")
