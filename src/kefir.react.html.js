@@ -273,8 +273,13 @@ export const fromIds = (ids, fromId) => ids.scan(([oldIds], ids) => {
   const newIds = {}
   const newVs = []
   ids.forEach(id => {
-    const newV = id in oldIds ? oldIds[id] : fromId(id)
-    newIds[id] = newV
+    let newV
+    if (id in newIds) {
+      newV = newIds[id]
+    } else {
+      newV = id in oldIds ? oldIds[id] : fromId(id)
+      newIds[id] = newV
+    }
     newVs.push(newV)
   })
   return [newIds, newVs]
