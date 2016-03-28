@@ -165,17 +165,37 @@ For notational convenience, the default import
 import K from "kefir.react.html"
 ```
 
-is also a generalized observable combiner.  It is roughly a combination of a
-[combine template](https://github.com/baconjs/bacon.js#bacon-combinetemplate)
-function with arbitrary number of templates and an optional combining function:
+is also a generalized observable combiner designed for combining properties to
+be embedded into VDOM.
+
+**NOTE:** `K` is *not* designed to be used as general purpose observable
+combinator.  It is designed for the particular use case of combining properties
+to be embedded into VDOM.
+
+The basic semantics of `K` can be described as
 
 ```js
-K(t, ...ts[, fn])
+K(x1, ..., xN, fn) === combine([x1, ..., xN], fn).skipDuplicates(equals)
 ```
 
-If none of the arguments contains Kefir observables, the result of a `K(...)`
-invocation is a plain value.  Otherwise the result is a Kefir property that also
-skips duplicates.
+where [`combine`](http://rpominov.github.io/kefir/#combine) and
+[`skipDuplicates`](http://rpominov.github.io/kefir/#skip-duplicates) come from
+Kefir and [`equals`](http://ramdajs.com/0.19.0/docs/#equals) from Ramda.  We
+skip duplicates, because that avoids some unnecessary updates.  Ramda's `equals`
+provides a semantics of equality that works, for immutable data, just the way we
+like.
+
+Unlike with [`combine`](http://rpominov.github.io/kefir/#combine), any argument
+of `K` is allowed to be
+* a constant,
+* an observable (including the combiner function), or
+* an array or object containing observables.
+In other words, `K` also provides functionality similar to
+[`combineTemplate`](https://github.com/baconjs/bacon.js#bacon-combinetemplate).
+
+When `K` is invoked with only constants (no observables), then the result is
+computed immediately and returned as a plain value.  This optimization
+eliminates redundant observables.
 
 ### Incremental arrays `fromIds`
 
