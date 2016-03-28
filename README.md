@@ -15,9 +15,10 @@ The names of the prelifted classes are the same as in `React.DOM`.
 
 ### Lifted classes
 
-A lifted class eliminates Kefir observables that appear as attributes or direct
-children of the produced element.  For example, using the lifted class `K.div`,
-you could write
+A lifted class eliminates Kefir
+[observables](http://rpominov.github.io/kefir/#about-observables) that appear as
+attributes or direct children of the produced element.  For example, using the
+lifted class `K.div`, you could write
 
 ```jsx
 <K.div>Hello, {observable}!</K.div>
