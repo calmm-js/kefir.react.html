@@ -188,6 +188,9 @@ skip duplicates, because that avoids some unnecessary updates.  Ramda's `equals`
 provides a semantics of equality that works, for immutable data, just the way we
 like.
 
+Note: `K` is carefully optimized for space; if you write equivalent combinations
+using Kefir's own operators, they will likely take more memory.
+
 Unlike with [`combine`](http://rpominov.github.io/kefir/#combine), any argument
 of `K` is allowed to be
 * a constant,
