@@ -35,8 +35,9 @@ The `mount` attribute on a lifted element
 <K.input mount={c => c && c.focus()}/>
 ```
 
-does the same thing as the ordinary JSX `ref` attribute: JSX/React treats it as
-a special case, so it had to be renamed.
+does the same thing as the ordinary JSX
+[`ref` attribute](https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute):
+JSX/React treats it as a special case, so it had to be renamed.
 
 ### Bind attribute template
 
