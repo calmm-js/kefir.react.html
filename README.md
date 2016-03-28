@@ -58,9 +58,10 @@ const settable = Atom("")
          {...bind({value: settable})}/>
 ```
 
-`bind` extends the given object, above `{value: settable}`, with an `onChange`
-attribute containing a function that copies the attribute, above `value`, from
-the event target to the attribute object, above `settable`.
+`bind` is just an ordinary function that extends the given object, above
+`{value: settable}`, with an `onChange` attribute containing a function that
+copies the attribute, above `value`, from the event target to the attribute
+object, above `settable`.
 
 ### Classes attribute template
 
