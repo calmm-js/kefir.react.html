@@ -1,7 +1,7 @@
 [![npm version](https://badge.fury.io/js/kefir.react.html.svg)](http://badge.fury.io/js/kefir.react.html) [![Build Status](https://travis-ci.org/calmm-js/kefir.react.html.svg?branch=master)](https://travis-ci.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html.svg)](https://david-dm.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html/dev-status.svg)](https://david-dm.org/calmm-js/kefir.react.html#info=devDependencies) [![Gitter](https://img.shields.io/gitter/room/calmm-js/chat.js.svg?style=flat-square)](https://gitter.im/calmm-js/chat)
 
 This library allows you to embed [Kefir](http://rpominov.github.io/kefir/)
-observables into React Virtual DOM.
+observables into [React](https://facebook.github.io/react/) Virtual DOM.
 
 ## Usage
 
