@@ -1,6 +1,6 @@
-import Kefir from "kefir"
-import R     from "ramda"
-import React from "react"
+import R            from "ramda"
+import React        from "react"
+import {Observable} from "kefir"
 
 import * as Combine from "./combine"
 
@@ -90,27 +90,33 @@ const FromClass = React.createClass({
 
     for (const key in props) {
       const val = props[key]
-      if (val instanceof Kefir.Observable) {
+      if (val instanceof Observable) {
         obsStreams.push(val)
       } else if ("children" === key &&
                  val instanceof Array) {
         for (let i=0, n=val.length; i<n; ++i) {
           const valI = val[i]
-          if (valI instanceof Kefir.Observable)
+          if (valI instanceof Observable)
             obsStreams.push(valI)
+        }
+      } else if ("style" === key) {
+        for (const k in val) {
+          const valK = val[k]
+          if (valK instanceof Observable)
+            obsStreams.push(valK)
         }
       }
     }
 
     const observable = Combine.asStream(...obsStreams, function() {
       const newProps = {}
-      let newChildren = null
+      let newChildren
 
       let k = -1
 
       for (const key in props) {
         const val = props[key]
-        if (val instanceof Kefir.Observable) {
+        if (val instanceof Observable) {
           const valO = arguments[++k]
           if ("children" === key)
             newChildren = valO
@@ -119,27 +125,53 @@ const FromClass = React.createClass({
           else
             newProps[key] = valO
         } else if ("children" === key && val instanceof Array) {
-          newChildren = []
           for (let i=0, n=val.length; i<n; ++i) {
             const valI = val[i]
-            newChildren.push(valI instanceof Kefir.Observable
-                             ? arguments[++k]
-                             : valI)
+            if (valI instanceof Observable) {
+              if (!newChildren) {
+                newChildren = Array(val.length)
+                for (let j=0; j<i; ++j)
+                  newChildren[j] = val[j]
+              }
+              newChildren[i] = arguments[++k]
+            } else if (newChildren) {
+              newChildren[i] = val[i]
+            }
           }
-        } else {
-          if ("children" === key)
+          if (!newChildren)
             newChildren = val
-          else if ("mount" === key)
-            newProps["ref"] = val
-          else
-            newProps[key] = val
+        } else if ("children" === key) {
+          newChildren = val
+        } else if ("mount" === key) {
+          newProps["ref"] = val
+        } else if ("style" === key) {
+          let newStyle
+          for (const i in val) {
+            const valI = val[i]
+            if (valI instanceof Observable) {
+              if (!newStyle) {
+                newStyle = {}
+                for (const j in val) {
+                  if (j === i)
+                    break
+                  newStyle[j] = val[j]
+                }
+              }
+              newStyle[i] = arguments[++k]
+            } else if (newStyle) {
+              newStyle[i] = valI
+            }
+          }
+          newProps["style"] = newStyle || val
+        } else {
+          newProps[key] = val
         }
       }
 
-      return React.createElement(Class, newProps, newChildren)
+      return React.createElement(Class, newProps, newChildren || null)
     })
 
-    if (observable instanceof Kefir.Observable) {
+    if (observable instanceof Observable) {
       const callback = e => {
         switch (e.type) {
           case "value": {
