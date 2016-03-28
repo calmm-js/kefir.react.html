@@ -27,6 +27,9 @@ lifted class `K.div`, you could write
 where `observable` refers to a Kefir observable.  The resulting `div` always
 shows the latest value produced by the observable.
 
+Aside from children, lifting of observables also descends into individual
+`style` attribute values.
+
 ### Mount attribute
 
 The `mount` attribute on a lifted element
