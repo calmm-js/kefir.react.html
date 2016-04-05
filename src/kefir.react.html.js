@@ -303,16 +303,12 @@ export const bind = template =>
 
 export const fromIds = (ids, fromId) => ids.scan(([oldIds], ids) => {
   const newIds = {}
-  const newVs = []
-  ids.forEach(id => {
-    let newV
-    if (id in newIds) {
-      newV = newIds[id]
-    } else {
-      newV = id in oldIds ? oldIds[id] : fromId(id)
-      newIds[id] = newV
-    }
-    newVs.push(newV)
+  const newVs = Array(ids.length)
+  ids.forEach((id, i) => {
+    if (id in newIds)
+      newVs[i] = newIds[id]
+    else
+      newIds[id] = newVs[i] = id in oldIds ? oldIds[id] : fromId(id)
   })
   return [newIds, newVs]
 }, [{}, []]).map(s => s[1])
