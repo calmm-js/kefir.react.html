@@ -49,9 +49,10 @@ function combine(template, values, state) {
     const constructor = template && template.constructor
 
     if (constructor === Array) {
-      const next = []
-      for (let i=0, n=template.length; i<n; ++i)
-        next.push(combine(template[i], values, state))
+      const n = template.length
+      const next = Array(n)
+      for (let i=0; i<n; ++i)
+        next[i] = combine(template[i], values, state)
       return next
     } else if (constructor === Object) {
       const next = {}
@@ -119,8 +120,11 @@ function makeCombineMany(Base) {
         case "value": {
           const values = this._values
           values[i] = e.value
-          if (!values.find(x => x === NO_VALUE))
-            this._maybeEmitValue(invoke(combine(this._template, values, {index: -1})))
+          for (let j=0, n=values.length; j<n; ++j) {
+            if (values[j] === NO_VALUE)
+              return
+          }
+          this._maybeEmitValue(invoke(combine(this._template, values, {index: -1})))
           break
         }
         case "error": {
@@ -130,11 +134,13 @@ function makeCombineMany(Base) {
         case "end": {
           const handlers = this._handlers
           handlers[i] = null
-          if (!handlers.find(x => x)) {
-            this._handlers = handlers.length
-            this._values = null
-            this._emitEnd()
+          for (let j=0, n=handlers.length; j<n; ++j) {
+            if (handlers[j])
+              return
           }
+          this._handlers = handlers.length
+          this._values = null
+          this._emitEnd()
           break
         }
       }
