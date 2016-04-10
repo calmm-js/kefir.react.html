@@ -49,21 +49,25 @@ const FromKefir = React.createClass({
       this.props.observable.offAny(callback)
   },
   doSubscribe({observable}) {
-    const callback = e => {
-      switch (e.type) {
-        case "value":
-          this.setState({rendered: e.value})
-          break
-        case "error":
-          config.onError(e.value)
-          break
-        case "end":
-          this.setState(FromKefirEnd)
-          break
+    if (observable instanceof Observable) {
+      const callback = e => {
+        switch (e.type) {
+          case "value":
+            this.setState({rendered: e.value})
+            break
+          case "error":
+            config.onError(e.value)
+            break
+          case "end":
+            this.setState(FromKefirEnd)
+            break
+        }
       }
+      observable.onAny(callback)
+      this.setState({callback})
+    } else {
+      this.setState({rendered: observable})
     }
-    observable.onAny(callback)
-    this.setState({callback})
   }
 })
 
