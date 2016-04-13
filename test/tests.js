@@ -1,5 +1,5 @@
-import Kefir from "kefir"
-import R     from "ramda"
+import * as Kefir from "kefir"
+import * as R     from "ramda"
 
 import {classes} from "../src/kefir.react.html"
 

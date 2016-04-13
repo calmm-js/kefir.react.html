@@ -1,6 +1,6 @@
-import Kefir   from "kefir"
-import R       from "ramda"
-import inherit from "./inherit"
+import * as Kefir from "kefir"
+import * as R     from "ramda"
+import inherit    from "./inherit"
 
 function forEach(template, fn) {
   if (template instanceof Kefir.Observable) {
