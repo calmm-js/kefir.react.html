@@ -125,29 +125,29 @@ const FromClass = React.createClass({
           if ("children" === key)
             newChildren = valO
           else if ("mount" === key)
-            newProps["ref"] = valO
+            newProps.ref = valO
           else
             newProps[key] = valO
-        } else if ("children" === key && val instanceof Array) {
-          for (let i=0, n=val.length; i<n; ++i) {
-            const valI = val[i]
-            if (valI instanceof Observable) {
-              if (!newChildren) {
-                newChildren = Array(val.length)
-                for (let j=0; j<i; ++j)
-                  newChildren[j] = val[j]
+        } else if ("children" === key) {
+          if (val instanceof Array) {
+            for (let i=0, n=val.length; i<n; ++i) {
+              const valI = val[i]
+              if (valI instanceof Observable) {
+                if (!newChildren) {
+                  newChildren = Array(val.length)
+                  for (let j=0; j<i; ++j)
+                    newChildren[j] = val[j]
+                }
+                newChildren[i] = arguments[++k]
+              } else if (newChildren) {
+                newChildren[i] = val[i]
               }
-              newChildren[i] = arguments[++k]
-            } else if (newChildren) {
-              newChildren[i] = val[i]
             }
           }
           if (!newChildren)
             newChildren = val
-        } else if ("children" === key) {
-          newChildren = val
         } else if ("mount" === key) {
-          newProps["ref"] = val
+          newProps.ref = val
         } else if ("style" === key) {
           let newStyle
           for (const i in val) {
@@ -166,7 +166,7 @@ const FromClass = React.createClass({
               newStyle[i] = valI
             }
           }
-          newProps["style"] = newStyle || val
+          newProps.style = newStyle || val
         } else {
           newProps[key] = val
         }
