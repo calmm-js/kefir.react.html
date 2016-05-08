@@ -206,6 +206,7 @@ function makeCombineOneWith(Base) {
     Base.call(this)
     this._observable = observable
     this._fn = fn
+    this._handler = null
   }
   inherit(CombineOneWith, Base, {
     _onActivation() {
