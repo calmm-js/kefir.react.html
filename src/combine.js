@@ -120,10 +120,9 @@ function makeCombineMany(Base) {
         case "value": {
           const values = this._values
           values[i] = e.value
-          for (let j=0, n=values.length; j<n; ++j) {
+          for (let j=0, n=values.length; j<n; ++j)
             if (values[j] === NO_VALUE)
               return
-          }
           this._maybeEmitValue(invoke(combine(this._template, values, {index: -1})))
           break
         }
@@ -134,10 +133,9 @@ function makeCombineMany(Base) {
         case "end": {
           const handlers = this._handlers
           handlers[i] = null
-          for (let j=0, n=handlers.length; j<n; ++j) {
+          for (let j=0, n=handlers.length; j<n; ++j)
             if (handlers[j])
               return
-          }
           this._handlers = handlers.length
           this._values = null
           this._emitEnd()
