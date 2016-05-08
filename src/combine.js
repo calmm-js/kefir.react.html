@@ -1,6 +1,5 @@
 import * as Kefir from "kefir"
 import * as R     from "ramda"
-import inherit    from "./inherit"
 
 function forEach(template, fn) {
   if (template instanceof Kefir.Observable) {
@@ -76,185 +75,167 @@ function invoke(xs) {
     : xs
 }
 
-const NO_VALUE = {}
-
 //
 
-function _maybeEmitValue(next) {
+function Combine() {
+  Kefir.Property.call(this)
+}
+
+Combine.prototype = Object.create(Kefir.Property.prototype)
+
+Combine.prototype._maybeEmitValue = function (next) {
   const prev = this._currentEvent
   if (!prev || !R.equals(prev.value, next))
     this._emitValue(next)
 }
 
-const maybeEmitValue = Base =>
-  Base === Kefir.Property
-  ? _maybeEmitValue
-  : Base.prototype._emitValue
-
 //
 
-function makeCombineMany(Base) {
-  function CombineMany(template, n) {
-    Base.call(this)
-    this._template = template
-    this._handlers = n
-    this._values = null
-  }
+function CombineMany(template, n) {
+  Combine.call(this)
+  this._template = template
+  this._handlers = n
+  this._values = null
+}
 
-  inherit(CombineMany, Base, {
-    _onActivation() {
-      const template = this._template
-      const n = this._handlers
-      const handlers = Array(n)
-      const values = Array(n)
-      for (let i=0; i<n; ++i) {
-        values[i] = NO_VALUE
-        handlers[i] = NO_VALUE
-      }
-      this._handlers = handlers
-      this._values = values
-      subscribe(template, handlers, this)
-    },
-    _handleAny(i, e) {
-      switch (e.type) {
-        case "value": {
-          const values = this._values
-          values[i] = e.value
-          for (let j=0, n=values.length; j<n; ++j)
-            if (values[j] === NO_VALUE)
-              return
-          this._maybeEmitValue(invoke(combine(this._template, values, {index: -1})))
-          break
-        }
-        case "error": {
-          this._emitError(e.value)
-          break
-        }
-        case "end": {
-          const handlers = this._handlers
-          handlers[i] = null
-          for (let j=0, n=handlers.length; j<n; ++j)
-            if (handlers[j])
-              return
-          this._handlers = handlers.length
-          this._values = null
-          this._emitEnd()
-          break
-        }
-      }
-    },
-    _onDeactivation() {
+CombineMany.prototype = Object.create(Combine.prototype)
+
+CombineMany.prototype._onActivation = function () {
+  const template = this._template
+  const n = this._handlers
+  const handlers = Array(n)
+  const values = Array(n)
+  for (let i=0; i<n; ++i) {
+    values[i] = this
+    handlers[i] = this
+  }
+  this._handlers = handlers
+  this._values = values
+  subscribe(template, handlers, this)
+}
+
+CombineMany.prototype._handleAny = function (i, e) {
+  switch (e.type) {
+    case "value": {
+      const values = this._values
+      values[i] = e.value
+      for (let j=0, n=values.length; j<n; ++j)
+        if (values[j] === this)
+          return
+      this._maybeEmitValue(invoke(combine(this._template, values, {index: -1})))
+      break
+    }
+    case "error": {
+      this._emitError(e.value)
+      break
+    }
+    default: {
       const handlers = this._handlers
+      handlers[i] = null
+      for (let j=0, n=handlers.length; j<n; ++j)
+        if (handlers[j])
+          return
       this._handlers = handlers.length
       this._values = null
-      unsubscribe(this._template, handlers)
-    },
-    _maybeEmitValue: maybeEmitValue(Base)
-  })
-  return CombineMany
-}
-
-const CombineMany = makeCombineMany(Kefir.Property)
-const CombineManys = makeCombineMany(Kefir.Stream)
-
-//
-
-function makeCombineOne(Base) {
-  function CombineOne(template) {
-    Base.call(this)
-    this._template = template
-    this._handler = null
+      this._emitEnd()
+      break
+    }
   }
-
-  inherit(CombineOne, Base, {
-    _onActivation() {
-      const handler = e => this._handleAny(e)
-      this._handler = handler
-      forEach(this._template, observable => observable.onAny(handler))
-    },
-    _handleAny(e) {
-      switch (e.type) {
-        case "value":
-          this._maybeEmitValue(invoke(combine(this._template, [e.value], {index: -1})))
-          break
-        case "error":
-          this._emitError(e.value)
-          break
-        case "end":
-          this._handler = null
-          this._emitEnd()
-          break
-      }
-    },
-    _onDeactivation() {
-      const {_handler} = this
-      this._handler = null
-      forEach(this._template, observable => observable.offAny(_handler))
-    },
-    _maybeEmitValue: maybeEmitValue(Base)
-  })
-  return CombineOne
 }
 
-const CombineOne = makeCombineOne(Kefir.Property)
-const CombineOnes = makeCombineOne(Kefir.Stream)
+CombineMany.prototype._onDeactivation = function () {
+  const handlers = this._handlers
+  this._handlers = handlers.length
+  this._values = null
+  unsubscribe(this._template, handlers)
+}
 
 //
 
-function makeCombineOneWith(Base) {
-  function CombineOneWith(observable, fn) {
-    Base.call(this)
-    this._observable = observable
-    this._fn = fn
-    this._handler = null
+function CombineOne(template) {
+  Combine.call(this)
+  this._template = template
+  this._handler = null
+}
+
+CombineOne.prototype = Object.create(Combine.prototype)
+
+CombineOne.prototype._onActivation = function () {
+  const handler = e => this._handleAny(e)
+  this._handler = handler
+  forEach(this._template, observable => observable.onAny(handler))
+}
+
+CombineOne.prototype._handleAny = function (e) {
+  switch (e.type) {
+    case "value":
+      this._maybeEmitValue(invoke(combine(this._template, [e.value], {index: -1})))
+      break
+    case "error":
+      this._emitError(e.value)
+      break
+    default:
+      this._handler = null
+      this._emitEnd()
+      break
   }
-  inherit(CombineOneWith, Base, {
-    _onActivation() {
-      const handler = e => this._handleAny(e)
-      this._handler = handler
-      this._observable.onAny(handler)
-    },
-    _handleAny(e) {
-      switch (e.type) {
-        case "value":
-          this._maybeEmitValue(this._fn(e.value))
-          break
-        case "error":
-          this._emitError(e.value)
-          break
-        case "end":
-          this._handler = null
-          this._emitEnd()
-          break
-      }
-    },
-    _onDeactivation() {
-      const {_handler, _observable} = this
-      this._handler = null
-      _observable.offAny(_handler)
-    },
-    _maybeEmitValue: maybeEmitValue(Base)
-  })
-  return CombineOneWith
 }
 
-const CombineOneWith = makeCombineOneWith(Kefir.Property)
-const CombineOnesWith = makeCombineOneWith(Kefir.Stream)
+CombineOne.prototype._onDeactivation = function () {
+  const {_handler} = this
+  this._handler = null
+  forEach(this._template, observable => observable.offAny(_handler))
+}
 
 //
 
-const makeCombine = (Many, One, OneWith) => (...template) => {
+function CombineOneWith(observable, fn) {
+  Combine.call(this)
+  this._observable = observable
+  this._fn = fn
+  this._handler = null
+}
+
+CombineOneWith.prototype = Object.create(Combine.prototype)
+
+CombineOneWith.prototype._onActivation = function () {
+  const handler = e => this._handleAny(e)
+  this._handler = handler
+  this._observable.onAny(handler)
+}
+
+CombineOneWith.prototype._handleAny = function (e) {
+  switch (e.type) {
+    case "value":
+      this._maybeEmitValue(this._fn(e.value))
+      break
+    case "error":
+      this._emitError(e.value)
+      break
+    default:
+      this._handler = null
+      this._emitEnd()
+      break
+  }
+}
+
+CombineOneWith.prototype._onDeactivation = function () {
+  const {_handler, _observable} = this
+  this._handler = null
+  _observable.offAny(_handler)
+}
+
+//
+
+export const asProperty = (...template) => {
   const n = count(template)
   switch (n) {
     case 0: return invoke(template)
     case 1: return (template.length === 2 &&
                     template[0] instanceof Kefir.Observable &&
                     template[1] instanceof Function
-                    ? new OneWith(template[0], template[1])
-                    : new One(template))
-    default: return new Many(template, n)
+                    ? new CombineOneWith(template[0], template[1])
+                    : new CombineOne(template))
+    default: return new CombineMany(template, n)
   }
 }
-
-export const asStream = makeCombine(CombineManys, CombineOnes, CombineOnesWith)
-export const asProperty = makeCombine(CombineMany, CombineOne, CombineOneWith)
