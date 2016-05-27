@@ -12,22 +12,26 @@ export const config = {
 
 //
 
-const common = {
+class LiftedComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = this.getInitialState()
+  }
   componentWillReceiveProps(nextProps) {
     this.doUnsubscribe()
     this.doSubscribe(nextProps)
-  },
+  }
   componentWillMount() {
     this.doUnsubscribe()
     this.doSubscribe(this.props)
-  },
+  }
   shouldComponentUpdate(np, ns) {
     return ns.rendered !== this.state.rendered
-  },
+  }
   componentWillUnmount() {
     this.doUnsubscribe()
     this.setState(this.getInitialState())
-  },
+  }
   render() {
     return this.state.rendered
   }
@@ -38,16 +42,18 @@ const common = {
 const FromKefirEnd = {callback: null}
 const FromKefirNull = {callback: null, rendered: null}
 
-const FromKefir = React.createClass({
-  ...common,
+class FromKefir extends LiftedComponent {
+  constructor(props) {
+    super(props)
+  }
   getInitialState() {
     return FromKefirNull
-  },
+  }
   doUnsubscribe() {
     const {callback} = this.state
     if (callback)
       this.props.observable.offAny(callback)
-  },
+  }
   doSubscribe({observable}) {
     if (observable instanceof Observable) {
       const callback = e => {
@@ -69,7 +75,7 @@ const FromKefir = React.createClass({
       this.setState({rendered: observable})
     }
   }
-})
+}
 
 export const fromKefir = observable =>
   React.createElement(FromKefir, {observable})
@@ -285,16 +291,18 @@ RendererN.prototype.doHandle = function (idx, e) {
 const FromClassEnd = {renderer: null}
 const FromClassNull = {renderer: null, rendered: null}
 
-const FromClass = React.createClass({
-  ...common,
+class FromClass extends LiftedComponent {
+  constructor(props) {
+    super(props)
+  }
   getInitialState() {
     return FromClassNull
-  },
+  }
   doUnsubscribe() {
     const {renderer} = this.state
     if (renderer)
       renderer.unsubscribe()
-  },
+  }
   doSubscribe(newProps) {
     const {props} = newProps
 
@@ -314,7 +322,7 @@ const FromClass = React.createClass({
         break
     }
   }
-})
+}
 
 export const fromClass =
   Class => props => React.createElement(FromClass, {Class, props})
