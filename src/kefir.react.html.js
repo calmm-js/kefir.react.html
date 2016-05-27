@@ -15,7 +15,7 @@ export const config = {
 class LiftedComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.getInitialState()
+    this.state = this.theInitialState()
   }
   componentWillReceiveProps(nextProps) {
     this.doUnsubscribe()
@@ -30,7 +30,7 @@ class LiftedComponent extends React.Component {
   }
   componentWillUnmount() {
     this.doUnsubscribe()
-    this.setState(this.getInitialState())
+    this.setState(this.theInitialState())
   }
   render() {
     return this.state.rendered
@@ -46,7 +46,7 @@ class FromKefir extends LiftedComponent {
   constructor(props) {
     super(props)
   }
-  getInitialState() {
+  theInitialState() {
     return FromKefirNull
   }
   doUnsubscribe() {
@@ -295,7 +295,7 @@ class FromClass extends LiftedComponent {
   constructor(props) {
     super(props)
   }
-  getInitialState() {
+  theInitialState() {
     return FromClassNull
   }
   doUnsubscribe() {
