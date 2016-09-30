@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/kefir.react.html.svg)](http://badge.fury.io/js/kefir.react.html) [![Build Status](https://travis-ci.org/calmm-js/kefir.react.html.svg?branch=master)](https://travis-ci.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html.svg)](https://david-dm.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html/dev-status.svg)](https://david-dm.org/calmm-js/kefir.react.html#info=devDependencies)
+[![npm version](https://badge.fury.io/js/kefir.react.html.svg)](http://badge.fury.io/js/kefir.react.html) [![Build Status](https://travis-ci.org/calmm-js/kefir.react.html.svg?branch=master)](https://travis-ci.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html.svg)](https://david-dm.org/calmm-js/kefir.react.html) [![](https://david-dm.org/calmm-js/kefir.react.html/dev-status.svg)](https://david-dm.org/calmm-js/kefir.react.html?type=dev)
 
 This library allows you to embed [Kefir](http://rpominov.github.io/kefir/)
 observables into [React](https://facebook.github.io/react/) Virtual DOM.
