@@ -184,7 +184,7 @@ FakeComponent.prototype.setState = function (newState) {
 //
 
 function Renderer1(component, newProps) {
-  const state = {renderer: this, rendered: component.rendered}
+  const state = {renderer: this, rendered: component.state.rendered}
   this.component = new FakeComponent(state, newProps)
   this.handler = e => this.doHandle(e)
   forEach(newProps.props, observable => observable.onAny(this.handler))
@@ -221,7 +221,7 @@ Renderer1.prototype.doHandle = function (e) {
 //
 
 function RendererN(component, newProps, n) {
-  const state = {renderer: this, rendered: component.rendered}
+  const state = {renderer: this, rendered: component.state.rendered}
   this.component = new FakeComponent(state, newProps)
   this.handlers = []
   this.values = Array(n)
