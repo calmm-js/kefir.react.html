@@ -3,6 +3,8 @@
 This library allows you to embed [Kefir](http://rpominov.github.io/kefir/)
 observables into [React](https://facebook.github.io/react/) Virtual DOM.
 
+**NOTE: This library has been superseded by the [Karet](https://github.com/calmm-js/karet) library.**
+
 ## Usage
 
 The prelifted classes can be accessed from the default import:
